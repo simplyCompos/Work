@@ -11,7 +11,18 @@ int rand_range()
 	return rand();
 }
 
-bubble_sort(int* arr, int lenght)
+int search(int* arr, int lenght, int value)
+{
+	for(int i = 0; i < lenght; i++)
+	{
+		if(value == arr[i])
+			return i;
+	}
+
+	return -1;
+}
+
+void bubble_sort(int* arr, int lenght)
 {
 	for(int j = 0; j > 0; j--)
         {
