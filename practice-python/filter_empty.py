@@ -1,4 +1,4 @@
-with open("somefile.txt", "r") as file:
-    content = file.readlines()
-    filtered = list(filter(lambda ch: ch != "\n", content))
-    print(filtered)
+import sys
+content = sys.stdin.read()
+filtered = "".join(filter(lambda ch: ch != "\n", content))
+print(filtered)
