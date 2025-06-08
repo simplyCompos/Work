@@ -14,7 +14,7 @@ def send_message_with_reply_keyboard(chat_id):
     keyboard = {
             "keyboard": [
                 [{"text": "USD Rate"}],
-                [{"text": "Help"}]
+                [{"text": "Help"}],
             "resize_keyboard":True,
             "one_time_keyboard": False
                 ]
