@@ -12,7 +12,7 @@ def get_updates(offset=None):
     return response.json()
 def send_message_with_reply_keyboard(chat_id):
     keyboard = {
-            "keyboard":[
+            "keyboard": [
                 [{"text": "USD Rate"}]
                 [{"text": "Help"}]
             "resize_keyboard":True,
