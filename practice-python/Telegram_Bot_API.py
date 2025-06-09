@@ -15,13 +15,13 @@ def send_message_with_reply_keyboard(chat_id):
             "keyboard": [
                 [{"text": "USD Rate"}],
                 [{"text": "Help"}]
+            ],
             "resize_keyboard":True,
             "one_time_keyboard": False
-                ]
             }
     payload = {
             "chat_id": chat_id,
-            "text": "Pick action",
+            "text": "Pick option",
             "reply_markup": keyboard
             }
     requests.post(f"{URL}/sendMessage", json=payload)
