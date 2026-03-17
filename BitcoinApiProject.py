@@ -1,37 +1,24 @@
-from flask import Flask, jsonify, request
-from datetime import datetime, timedelta
-import random
+import requests
 
-app = Flask(__name__)
+url = "https://api.coingecko.com/api/v3/simple/price"
+params = {
+    "ids": "bitcoin,ethereum",
+    "vs_currencies": "usd"
+}
 
-currencies = ["BTC", "ETH", "USD"]
-data = []
+response = requests.get(url, params=params)
 
-base_prices = {"BTC": 24000, "ETH": 1600, "USD": 27}
+print("STATUS:", response.status_code)
+print("HEADERS:", response.headers)
+print("BODY:", response.json())
 
-for i in range(30, -1, -1):
-    day = datetime.now() - timedelta(days=i)
-    entry = {"date": day.strftime("%Y-%m-%d")}
-    for cur in currencies:
-        change = random.uniform(-0.02, 0.02)  
-        base_prices[cur] *= (1 + change)
-        entry[cur] = round(base_prices[cur], 2)
-    data.append(entry)
+post_url = "https://httpbin.org/post"
+data = {
+    "name": "CryptoUser",
+    "action": "test POST"
+}
 
-@app.route("/")
-def index():
-    return jsonify(status="ok", message="Crypto Price API is running")
+post_response = requests.post(post_url, json=data)
 
-@app.route("/prices", methods=["GET"])
-def get_prices():
-    period_days = request.args.get("days", default=30)
-    try:
-        days = int(period_days)
-        cutoff_date = datetime.now() - timedelta(days=days)
-        filtered = [entry for entry in data if datetime.strptime(entry["date"], "%Y-%m-%d") >= cutoff_date]
-        return jsonify(status="ok", data=filtered, message=f"Last {days} days")
-    except ValueError:
-        return jsonify(status="error", message="Invalid days value"), 400
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+print("\nPOST STATUS:", post_response.status_code)
+print("POST BODY:", post_response.json())
