@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 import requests
 
-app = Flask(name)
+app = Flask(__name__)
 
 @app.route("/prices")
 def prices():
@@ -36,5 +36,5 @@ def prices():
 
     return jsonify(status="ok", data=result)
 
-if name == "main":
+if __name__ == "__main__":
     app.run(debug=True)
