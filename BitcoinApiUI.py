@@ -4,37 +4,6 @@ import requests
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-def show_chart():
-    coins = coins_entry.get()
-    days = days_entry.get()
-    currency = currency_var.get()
-
-    url = f"http://127.0.0.1:5000/prices?coins={coins}&days={days}&currency={currency}"
-
-    try:
-        response = requests.get(url)
-        data = response.json()["data"]
-
-        for coin, prices in data.items():
-            dates = []
-            values = []
-            seen_dates = set()
-
-            for p in prices:
-                date = datetime.fromtimestamp(p["time"]/1000).strftime("%Y-%m-%d")
-
-                if date in seen_dates:
-                    continue
-
-                seen_dates.add(date)
-
-                dates.append(date)
-                values.append(p["price"])
-
-            plt.plot(dates, values, label=coin)
-    except Exception as e:
-        print(e)
-
 def load_data():
     coins = coins_entry.get()
     days = days_entry.get()
@@ -53,17 +22,6 @@ def load_data():
             if prices == "error" or not prices:
                 continue
 
-        plt.xticks(rotation=45)
-        plt.title("Crypto Prices")
-        plt.xlabel("Date")
-        plt.ylabel(f"Price ({currency.upper()})")
-        plt.legend()
-        plt.tight_layout()
-        plt.show()
-
-    except Exception as e:
-        print(e)
-
             seen_dates = set()
 
             for p in prices:
@@ -77,6 +35,53 @@ def load_data():
                 price = round(p["price"], 2)
 
                 tree.insert("", "end", values=(coin, date, price, currency.upper()))
+
+    except Exception as e:
+        print(e)
+
+            seen_dates = set()
+
+def show_chart():
+    coins = coins_entry.get()
+    days = days_entry.get()
+    currency = currency_var.get()
+
+    url = f"http://127.0.0.1:5000/prices?coins={coins}&days={days}&currency={currency}"
+
+    try:
+        response = requests.get(url)
+        data = response.json()["data"]
+
+        plt.figure()  
+
+        for coin, prices in data.items():
+            dates = []
+            values = []
+            seen_dates = set()
+
+            for p in prices:
+                date = datetime.fromtimestamp(p["time"]/1000).strftime("%Y-%m-%d")
+
+                if date in seen_dates:
+                    continue
+
+                seen_dates.add(date)
+
+                dates.append(date)
+                values.append(p["price"])
+
+            plt.plot(dates, values, label=coin)
+
+        plt.xticks(rotation=45)
+        plt.title("Crypto Prices")
+        plt.xlabel("Date")
+        plt.ylabel(f"Price ({currency.upper()})")
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+    except Exception as e:
+        print(e)
 
 root = tk.Tk()
 root.title("Crypto Viewer")
