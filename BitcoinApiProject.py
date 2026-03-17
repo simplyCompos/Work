@@ -1,33 +1,40 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import requests
 
 app = Flask(name)
 
-@app.route("/")
-def home():
-    return jsonify(status="ok", message="Crypto API working")
-
 @app.route("/prices")
 def prices():
-    url = "https://api.coingecko.com/api/v3/simple/price"
+    coins = request.args.get("coins", "bitcoin")
+    days = request.args.get("days", "30")
+    currency = request.args.get("currency", "usd")
 
-    params = {
-        "ids": "bitcoin,ethereum",
-        "vs_currencies": "usd"
-    }
+    result = {}
 
-    response = requests.get(url)
+    for coin in coins.split(","):
+        url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart"
 
-    if response.status_code != 200:
-        return jsonify(status="error", message="API error"), 500
+        params = {
+            "vs_currency": currency,
+            "days": days
+        }
 
-    data = response.json()
+        response = requests.get(url, params=params)
 
-    return jsonify(
-        status="ok",
-        data=data
-    )
+        if response.status_code != 200:
+            result[coin] = "error"
+            continue
+
+        data = response.json()
+
+        prices = [
+            {"time": p[0], "price": p[1]}
+            for p in data["prices"]
+        ]
+
+        result[coin] = prices
+
+    return jsonify(status="ok", data=result)
 
 if name == "main":
-    print("Running API...")
     app.run(debug=True)
