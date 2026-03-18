@@ -39,8 +39,6 @@ def load_data():
     except Exception as e:
         print(e)
 
-            seen_dates = set()
-
 def show_chart():
     coins = coins_entry.get()
     days = days_entry.get()
